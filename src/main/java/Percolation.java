@@ -73,28 +73,26 @@ public class Percolation {
 
     public void open(int row, int col) {
         int index = yxToId(row, col);
-        if (isOpen(row, col)) {
-            return;
-        } else {
-            int topIndex = getTopIndex(row, col);
-            if (topIndex > -1 && isOpen(topIndex)) {
-                uf.union(index, topIndex);
-            }
-            int buttomIndex = getButtomIndex(row, col);
-            if (buttomIndex > -1 && isOpen(buttomIndex)) {
-                uf.union(index, buttomIndex);
-            }
-            int leftIndex = getLeftIndex(row, col);
-            if (leftIndex > -1 && isOpen(leftIndex)) {
-                uf.union(index, leftIndex);
-            }
-            int rigthIndex = getRightIndex(row, col);
-            if (rigthIndex > -1 && isOpen(rigthIndex)) {
-                uf.union(index, rigthIndex);
-            }
+        if (!isOpen(row, col)) {
+            openClose[index] = 1;
+            openedNumber++;
         }
-        openClose[index] = 1;
-        openedNumber++;
+        int topIndex = getTopIndex(row, col);
+        if (topIndex != -1 && isOpen(topIndex) && !uf.connected(index, topIndex)) {
+            uf.union(index, topIndex);
+        }
+        int rigthIndex = getRightIndex(row, col);
+        if (rigthIndex != -1 && isOpen(rigthIndex) && !uf.connected(index, rigthIndex)) {
+            uf.union(index, rigthIndex);
+        }
+        int buttomIndex = getButtomIndex(row, col);
+        if (buttomIndex != -1 && isOpen(buttomIndex) && !uf.connected(index, buttomIndex)) {
+            uf.union(index, buttomIndex);
+        }
+        int leftIndex = getLeftIndex(row, col);
+        if (leftIndex != -1 && isOpen(leftIndex) && !uf.connected(index, leftIndex)) {
+            uf.union(index, leftIndex);
+        }
     }    // open site (row, col) if it is not open already
 
     public boolean isOpen(int row, int col) {
