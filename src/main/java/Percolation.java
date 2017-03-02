@@ -76,22 +76,27 @@ public class Percolation {
         if (!isOpen(row, col)) {
             openClose[index] = 1;
             openedNumber++;
+            System.out.println("Open: row= " + row + ", col=" + col);
         }
         int topIndex = getTopIndex(row, col);
         if (topIndex != -1 && isOpen(topIndex) && !uf.connected(index, topIndex)) {
             uf.union(index, topIndex);
+            System.out.println("Joined with top. Index = " + topIndex);
         }
         int rigthIndex = getRightIndex(row, col);
         if (rigthIndex != -1 && isOpen(rigthIndex) && !uf.connected(index, rigthIndex)) {
             uf.union(index, rigthIndex);
+            System.out.println("Joined with right. Index = " + rigthIndex);
         }
         int buttomIndex = getButtomIndex(row, col);
         if (buttomIndex != -1 && isOpen(buttomIndex) && !uf.connected(index, buttomIndex)) {
             uf.union(index, buttomIndex);
+            System.out.println("Joined with buttom. Index = " + buttomIndex);
         }
         int leftIndex = getLeftIndex(row, col);
         if (leftIndex != -1 && isOpen(leftIndex) && !uf.connected(index, leftIndex)) {
             uf.union(index, leftIndex);
+            System.out.println("Joined with left. Index = " + leftIndex);
         }
     }    // open site (row, col) if it is not open already
 
