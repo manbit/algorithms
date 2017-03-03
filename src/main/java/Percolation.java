@@ -14,55 +14,45 @@ public class Percolation {
         size = n * n + 2;
         uf = new WeightedQuickUnionUF(size);
         openClose = new int[size];
-//        union first row with virtual top
-        for (int i = 1; i <= n; i++) {
-            uf.union(0, i);
-        }
-//        union last row with virtual buttom
-        for (int i = size - 2; i >= size - n - 1; i--) {
-            uf.union(size - 1, i);
-        }
+//       Open virtual top and buttom
+        openClose[0] = 1;
+        openClose[size - 1] = 1;
     }                // create n-by-n grid, with all sites blocked
 
     public static void main(String[] args) {
-        In in = new In(args[0]);      // input file
-        int n = in.readInt();         // n-by-n percolation system
-
-        // repeatedly read in sites to open and draw resulting system
-        Percolation perc = new Percolation(n);
-        while (!in.isEmpty() || perc.percolates()) {
-            int i = in.readInt();
-            int j = in.readInt();
-            perc.open(i, j);
-        }
     }   // test client (optional)
 
-    public int yxToId(int y, int x) {
+    private int yxToId(int y, int x) {
         return (y - 1) * n + x;
     }
 
-    public int getTopIndex(int row, int col) {
+    private int getTopIndex(int row, int col) {
         if (row > 1) {
             return yxToId(row - 1, col);
         }
-        return -1;
-    }
-
-    public int getButtomIndex(int row, int col) {
-        if (row < n) {
-            return yxToId(row + 1, col);
+        if (row == 1) {
+            return 0;
         }
         return -1;
     }
 
-    public int getLeftIndex(int row, int col) {
+    private int getButtomIndex(int row, int col) {
+        if (row < n) {
+            return yxToId(row + 1, col);
+        } else if (row == n) {
+            return size - 1;
+        }
+        return -1;
+    }
+
+    private int getLeftIndex(int row, int col) {
         if (col > 1) {
             return yxToId(row, col - 1);
         }
         return -1;
     }
 
-    public int getRightIndex(int row, int col) {
+    private int getRightIndex(int row, int col) {
         if (col < n && col > 1) {
             return yxToId(row, col - 1);
         } else if (col < n) {
@@ -76,27 +66,22 @@ public class Percolation {
         if (!isOpen(row, col)) {
             openClose[index] = 1;
             openedNumber++;
-            System.out.println("Open: row= " + row + ", col=" + col);
         }
         int topIndex = getTopIndex(row, col);
         if (topIndex != -1 && isOpen(topIndex) && !uf.connected(index, topIndex)) {
             uf.union(index, topIndex);
-            System.out.println("Joined with top. Index = " + topIndex);
         }
         int rigthIndex = getRightIndex(row, col);
         if (rigthIndex != -1 && isOpen(rigthIndex) && !uf.connected(index, rigthIndex)) {
             uf.union(index, rigthIndex);
-            System.out.println("Joined with right. Index = " + rigthIndex);
         }
         int buttomIndex = getButtomIndex(row, col);
         if (buttomIndex != -1 && isOpen(buttomIndex) && !uf.connected(index, buttomIndex)) {
             uf.union(index, buttomIndex);
-            System.out.println("Joined with buttom. Index = " + buttomIndex);
         }
         int leftIndex = getLeftIndex(row, col);
         if (leftIndex != -1 && isOpen(leftIndex) && !uf.connected(index, leftIndex)) {
             uf.union(index, leftIndex);
-            System.out.println("Joined with left. Index = " + leftIndex);
         }
     }    // open site (row, col) if it is not open already
 
