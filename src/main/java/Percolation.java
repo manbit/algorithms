@@ -7,6 +7,7 @@ public class Percolation {
     private int[] sites;
     //
     private WeightedQuickUnionUF wquf;
+    private int openedNumber;
 
     // create N-by-N grid, with all sites blocked
     public Percolation(int N) {
@@ -37,6 +38,7 @@ public class Percolation {
 
         final int index = getIndex(row, column);
         sites[index] = 1;
+        openedNumber++;
 
         if (row == 1 && column == 1) {
             wquf.union(index, 0);
@@ -92,5 +94,9 @@ public class Percolation {
 
     private int getIndex(int row, int column) {
         return (row - 1) * N + column;
+    }
+
+    public int numberOfOpenSites() {
+        return openedNumber;
     }
 }
