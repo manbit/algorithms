@@ -25,7 +25,7 @@ import edu.princeton.cs.introcs.StdDraw;
 public class PercolationVisualizer {
 
     // delay in miliseconds (controls animation speed)
-    private static final int DELAY = 100;
+    private static final int DELAY = 50;
 
     // draw n-by-n percolation system
     public static void draw(Percolation perc, int n) {
@@ -72,7 +72,7 @@ public class PercolationVisualizer {
         Percolation perc = new Percolation(n);
         draw(perc, n);
         StdDraw.show();
-        while (!in.isEmpty() && !perc.percolates()) {
+        while (!in.isEmpty()/* && !perc.percolates()*/) {
             int i = in.readInt();
             int j = in.readInt();
             perc.open(i, j);

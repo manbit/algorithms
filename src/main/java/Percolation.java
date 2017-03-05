@@ -1,107 +1,96 @@
 import edu.princeton.cs.algorithms.WeightedQuickUnionUF;
-import edu.princeton.cs.introcs.In;
 
 public class Percolation {
+    // dimension of the grid
+    private int N;
+    // 0 - open, 1 - closed
+    private int[] sites;
+    //
+    private WeightedQuickUnionUF wquf;
 
-    private int[] openClose;
-    private WeightedQuickUnionUF uf;
-    private int size;
-    private int n;
-    private int openedNumber;
+    // create N-by-N grid, with all sites blocked
+    public Percolation(int N) {
+        if (N <= 0) {
+            throw new IllegalArgumentException(String.format("N %d", N));
+        }
+        this.N = N;
+        sites = new int[N * N + 2];
+        wquf = new WeightedQuickUnionUF(N * N + 2);
+        sites[0] = 1;
+        sites[sites.length - 1] = 1;
+    }
 
-    public Percolation(int n) {
-        this.n = n;
-        size = n * n + 2;
-        uf = new WeightedQuickUnionUF(size);
-        openClose = new int[size];
-//       Open virtual top and buttom
-        openClose[0] = 1;
-        openClose[size - 1] = 1;
-    }                // create n-by-n grid, with all sites blocked
-
+    // test client (optional)
     public static void main(String[] args) {
-    }   // test client (optional)
 
-    private int yxToId(int y, int x) {
-        return (y - 1) * n + x;
     }
 
-    private int getTopIndex(int row, int col) {
-        if (row > 1) {
-            return yxToId(row - 1, col);
+    // open site (row row, column column) if it is not open already
+    public void open(int row, int column) {
+        if (!isValid(row, column)) {
+            throw new IllegalArgumentException(String.format("Row %d, column %d", row, column));
         }
-        if (row == 1) {
-            return 0;
+
+        if (isOpen(row, column)) {
+            return;
         }
-        return -1;
+
+        final int index = getIndex(row, column);
+        sites[index] = 1;
+
+        if (row == 1 && column == 1) {
+            wquf.union(index, 0);
+        }
+
+        if (row == N && column == N) {
+            wquf.union(index, sites.length - 1);
+        }
+
+        //        if the left site is open - union them
+        if (column > 1 && isOpen(row, column - 1)) {
+            wquf.union(index, getIndex(row, column - 1));
+        }
+        //        if the top site is open - union them
+        if (row > 1 && isOpen(row - 1, column)) {
+            wquf.union(index, getIndex(row - 1, column));
+        }
+        //        if the right site is open - union them
+        if (column < N && isOpen(row, column + 1)) {
+            wquf.union(index, getIndex(row, column + 1));
+        }
+        //        if the bottom site is open - union them
+        if (row < N && isOpen((row + 1), column)) {
+            wquf.union(index, getIndex(row + 1, column));
+        }
     }
 
-    private int getButtomIndex(int row, int col) {
-        if (row < n) {
-            return yxToId(row + 1, col);
-        } else if (row == n) {
-            return size - 1;
+    // is site (row row, column column) open?
+    public boolean isOpen(int row, int column) {
+        if (!isValid(row, column)) {
+            throw new IllegalArgumentException(String.format("Row %d, column %d", row, column));
         }
-        return -1;
+        return sites[getIndex(row, column)] == 1;
     }
 
-    private int getLeftIndex(int row, int col) {
-        if (col > 1) {
-            return yxToId(row, col - 1);
+    // is site (row row, column column) full?
+    public boolean isFull(int row, int column) {
+        if (!isValid(row, column)) {
+            throw new IndexOutOfBoundsException(String.format("Row %d, column %d", row, column));
         }
-        return -1;
+
+        return this.wquf.connected(0, getIndex(row, column));
     }
 
-    private int getRightIndex(int row, int col) {
-        if (col < n && col > 1) {
-            return yxToId(row, col - 1);
-        } else if (col < n) {
-            return yxToId(row, 2);
-        }
-        return -1;
-    }
-
-    public void open(int row, int col) {
-        int index = yxToId(row, col);
-        if (!isOpen(row, col)) {
-            openClose[index] = 1;
-            openedNumber++;
-        }
-        int topIndex = getTopIndex(row, col);
-        if (topIndex != -1 && isOpen(topIndex) && !uf.connected(index, topIndex)) {
-            uf.union(index, topIndex);
-        }
-        int rigthIndex = getRightIndex(row, col);
-        if (rigthIndex != -1 && isOpen(rigthIndex) && !uf.connected(index, rigthIndex)) {
-            uf.union(index, rigthIndex);
-        }
-        int buttomIndex = getButtomIndex(row, col);
-        if (buttomIndex != -1 && isOpen(buttomIndex) && !uf.connected(index, buttomIndex)) {
-            uf.union(index, buttomIndex);
-        }
-        int leftIndex = getLeftIndex(row, col);
-        if (leftIndex != -1 && isOpen(leftIndex) && !uf.connected(index, leftIndex)) {
-            uf.union(index, leftIndex);
-        }
-    }    // open site (row, col) if it is not open already
-
-    public boolean isOpen(int row, int col) {
-        return openClose[yxToId(row, col)] == 1;
-    }  // is site (row, col) open?
-
-    public boolean isOpen(int index) {
-        return openClose[index] == 1;
-    }  // is site (row, col) open?
-
-    public boolean isFull(int row, int col) {
-        return openClose[yxToId(row, col)] == 0;
-    }  // is site (row, col) full?
-
-    public int numberOfOpenSites() {
-        return openedNumber;
-    }       // number of open sites
-
+    // does the system percolate?
     public boolean percolates() {
-        return uf.connected(0, size - 1);
-    }              // does the system percolate?
+        return wquf.connected(0, N * N + 1);
+    }
+
+    private boolean isValid(int row, int column) {
+        return row > 0 && row <= N * N && column > 0 && column <= N * N;
+    }
+
+    private int getIndex(int row, int column) {
+        return (row - 1) * N + column;
+    }
 }
