@@ -1,6 +1,6 @@
-import edu.princeton.cs.introcs.StdStats;
+import edu.princeton.cs.algs4.StdStats;
 
-import static edu.princeton.cs.introcs.StdRandom.uniform;
+import static edu.princeton.cs.algs4.StdRandom.uniform;
 
 public class PercolationStats {
     private double[] openSites;

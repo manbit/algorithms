@@ -1,4 +1,4 @@
-import edu.princeton.cs.algorithms.WeightedQuickUnionUF;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     // dimension of the grid

@@ -9,10 +9,10 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <!-- https://mvnrepository.com/artifact/com.googlecode.princeton-java-algorithms/algorithms -->
-    <dependency>
+    <!--<dependency>
       <groupId>com.googlecode.princeton-java-algorithms</groupId>
       <artifactId>algorithms</artifactId>
       <version>4.0.1</version>
-    </dependency>
+    </dependency>-->
   </dependencies>
 </project>
