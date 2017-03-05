@@ -1,6 +1,5 @@
+import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-
-import static edu.princeton.cs.algs4.StdRandom.uniform;
 
 public class PercolationStats {
     private double[] openSites;
@@ -13,17 +12,17 @@ public class PercolationStats {
         openSites = new double[trials];
         for (int i = 0; i < trials; ++i) {
             Percolation p = new Percolation(n);
-            int openSites = 0;
+            int opened = 0;
             while (!p.percolates()) {
-                int row = uniform(1, n + 1);
-                int column = uniform(1, n + 1);
+                int row = StdRandom.uniform(1, n + 1);
+                int column = StdRandom.uniform(1, n + 1);
 
                 if (!p.isOpen(row, column)) {
-                    ++openSites;
+                    ++opened;
                     p.open(row, column);
                 }
             }
-            this.openSites[i] = ((double) openSites) / (n * n);
+            this.openSites[i] = ((double) opened) / (n * n);
         }
     }    // perform trials independent experiments on an n-by-n grid
 

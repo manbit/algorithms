@@ -2,21 +2,20 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     // dimension of the grid
-    private int N;
+    private int n;
     // 0 - open, 1 - closed
     private int[] sites;
-    //
     private WeightedQuickUnionUF wquf;
     private int openedNumber;
 
-    // create N-by-N grid, with all sites blocked
-    public Percolation(int N) {
-        if (N <= 0) {
-            throw new IllegalArgumentException(String.format("N %d", N));
+    // create size-by-size grid, with all sites blocked
+    public Percolation(int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException(String.format("size %d", size));
         }
-        this.N = N;
-        sites = new int[N * N + 2];
-        wquf = new WeightedQuickUnionUF(N * N + 2);
+        this.n = size;
+        sites = new int[size * size + 2];
+        wquf = new WeightedQuickUnionUF(size * size + 2);
         sites[0] = 1;
         sites[sites.length - 1] = 1;
     }
@@ -44,7 +43,7 @@ public class Percolation {
             wquf.union(index, 0);
         }
 
-        if (row == N && column == N) {
+        if (row == n && column == n) {
             wquf.union(index, sites.length - 1);
         }
 
@@ -57,11 +56,11 @@ public class Percolation {
             wquf.union(index, getIndex(row - 1, column));
         }
         //        if the right site is open - union them
-        if (column < N && isOpen(row, column + 1)) {
+        if (column < n && isOpen(row, column + 1)) {
             wquf.union(index, getIndex(row, column + 1));
         }
         //        if the bottom site is open - union them
-        if (row < N && isOpen((row + 1), column)) {
+        if (row < n && isOpen((row + 1), column)) {
             wquf.union(index, getIndex(row + 1, column));
         }
     }
@@ -85,15 +84,15 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return wquf.connected(0, N * N + 1);
+        return wquf.connected(0, n * n + 1);
     }
 
     private boolean isValid(int row, int column) {
-        return row > 0 && row <= N * N && column > 0 && column <= N * N;
+        return row > 0 && row <= n * n && column > 0 && column <= n * n;
     }
 
     private int getIndex(int row, int column) {
-        return (row - 1) * N + column;
+        return (row - 1) * n + column;
     }
 
     public int numberOfOpenSites() {
