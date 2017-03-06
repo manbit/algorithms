@@ -39,11 +39,11 @@ public class Percolation {
         sites[index] = 1;
         openedNumber++;
 
-        if (row == 1 && column == 1) {
+        if (row == 1) {
             wquf.union(index, 0);
         }
 
-        if (row == n && column == n) {
+        if (row == n) {
             wquf.union(index, sites.length - 1);
         }
 
