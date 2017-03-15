@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.In;
 
 public class Permutation {
     public static void main(String[] args) {
-        int k = Integer.valueOf(args[0]);
+        int k = Integer.parseInt(args[0]);
         In in = new In(args[1]);
 
         RandomizedQueue<String> deque = new RandomizedQueue<>();

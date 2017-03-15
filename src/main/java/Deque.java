@@ -82,7 +82,7 @@ public class Deque<Item> implements Iterable<Item> {
     }         // return an iterator over items in order from front to end
 
     private class DequeIterator<Item> implements Iterator<Item> {
-        Node current;
+        private Node current;
 
         public DequeIterator() {
             this.current = head;
@@ -107,8 +107,8 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class Node {
-        Item value;
-        Node next, privious;
+        private Item value;
+        private Node next, privious;
     }
 
 }

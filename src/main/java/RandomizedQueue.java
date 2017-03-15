@@ -86,8 +86,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }// return an independent iterator over items in random order
 
     private class RandomizeQueueIterator<Item> implements Iterator<Item> {
-        Item[] randomCopy;
-        int index;
+        private Item[] randomCopy;
+        private int index;
 
         public RandomizeQueueIterator() {
             randomCopy = (Item[]) Arrays.copyOf(queue, queue.length);
