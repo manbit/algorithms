@@ -32,8 +32,8 @@ public class Deque<Item> implements Iterable<Item> {
         if (head.value != null) {
             Node node = new Node();
             node.value = item;
-            node.next = head;
-            head.privious = node;
+            node.privious = head;
+            head.next = node;
             head = node;
         } else {
             head.value = item;
@@ -48,8 +48,8 @@ public class Deque<Item> implements Iterable<Item> {
         if (tail.value != null) {
             Node node = new Node();
             node.value = item;
-            node.privious = tail;
-            tail.next = node;
+            node.next = tail;
+            tail.privious = node;
             tail = node;
         } else {
             tail.value = item;
@@ -60,10 +60,12 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeFirst() {
         if (size == 0) throw new NoSuchElementException();
         Node forRemove = head;
-        head = forRemove.next;
-        head.privious = null;
+        head = forRemove.privious;
+        head.next = null;
         size--;
-        return forRemove.value;
+        Item value = forRemove.value;
+        clean(forRemove);
+        return value;
     }                // remove and return the item from the front
 
     public Item removeLast() {
@@ -71,14 +73,22 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException();
         }
         Node forRemove = tail;
-        tail = forRemove.privious;
-        tail.next = null;
+        tail = forRemove.next;
+        tail.privious = null;
         size--;
-        return forRemove.value;
+        Item value = forRemove.value;
+        clean(forRemove);
+        return value;
     }                 // remove and return the item from the end
 
+    private void clean(Node node) {
+        node.privious = null;
+        node.next = null;
+        node.value = null;
+    }
+
     public Iterator<Item> iterator() {
-        return new DequeIterator<Item>();
+        return new DequeIterator<>();
     }         // return an iterator over items in order from front to end
 
     private class DequeIterator<Item> implements Iterator<Item> {
