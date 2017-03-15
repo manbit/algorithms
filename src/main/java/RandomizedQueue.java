@@ -82,8 +82,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }                     // return (but do not remove) a random item
 
     public Iterator<Item> iterator() {
-        return new RandomizeQueueIterator<Item>();
-    }// return an independent iterator over items in random order
+        return new RandomizeQueueIterator<>();
+    }   // return an independent iterator over items in random order
 
     private class RandomizeQueueIterator<Item> implements Iterator<Item> {
         private Item[] randomCopy;
