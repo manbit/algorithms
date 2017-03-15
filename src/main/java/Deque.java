@@ -60,10 +60,12 @@ public class Deque<Item> implements Iterable<Item> {
     public Item removeFirst() {
         if (size == 0) throw new NoSuchElementException();
         Node forRemove = head;
-        head = forRemove.privious;
-        head.next = null;
-        size--;
         Item value = forRemove.value;
+        if (size > 1) {
+            head = forRemove.privious;
+            head.next = null;
+        }
+        size--;
         clean(forRemove);
         return value;
     }                // remove and return the item from the front
@@ -73,10 +75,12 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException();
         }
         Node forRemove = tail;
-        tail = forRemove.next;
-        tail.privious = null;
-        size--;
         Item value = forRemove.value;
+        if (size > 1) {
+            tail = forRemove.next;
+            tail.privious = null;
+        }
+        size--;
         clean(forRemove);
         return value;
     }                 // remove and return the item from the end
