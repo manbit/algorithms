@@ -6,9 +6,9 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    Item[] queue;
-    int capacity;
-    int currentIndex;
+    private Item[] queue;
+    private int capacity;
+    private int currentIndex;
 
     public RandomizedQueue() {
         capacity = 0;
@@ -85,7 +85,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomizeQueueIterator<Item>();
     }// return an independent iterator over items in random order
 
-    public class RandomizeQueueIterator<Item> implements Iterator<Item> {
+    private class RandomizeQueueIterator<Item> implements Iterator<Item> {
         Item[] randomCopy;
         int index;
 

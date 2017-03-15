@@ -3,8 +3,8 @@ import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
-    Node head, tail;
-    int size;
+    private Node head, tail;
+    private int size;
 
     public Deque() {
         head = new Node();
@@ -81,7 +81,7 @@ public class Deque<Item> implements Iterable<Item> {
         return new DequeIterator<Item>();
     }         // return an iterator over items in order from front to end
 
-    public class DequeIterator<Item> implements Iterator<Item> {
+    private class DequeIterator<Item> implements Iterator<Item> {
         Node current;
 
         public DequeIterator() {
