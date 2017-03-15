@@ -7,11 +7,11 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] queue;
-    private int capacity;
-    private int currentIndex;
+    private int count;
+    private int futureIndex;
 
     public RandomizedQueue() {
-        capacity = 0;
+        count = 0;
         queue = (Item[]) new Object[1];
     }                 // construct an empty randomized queue
 
@@ -20,27 +20,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }   // unit testing (optional)
 
     public boolean isEmpty() {
-        return capacity == 0;
+        return count == 0;
     }                 // is the queue empty?
 
     public int size() {
-        return capacity;
+        return count;
     }                        // return the number of items on the queue
 
     public void enqueue(Item item) {
-        adjustSize();
-        queue[currentIndex++] = item;
-        capacity++;
+        adjustSize(futureIndex);
+        queue[futureIndex++] = item;
+        count++;
 
     }           // add the item
 
-    private void adjustSize() {
-        if (capacity == 0) {
+    private void adjustSize(int futureIndex) {
+        if (count == 0) {
             return;
         }
-        if (queue.length == capacity) {
+        if (queue.length == count || queue.length == futureIndex) {
             resize(queue.length * 2);
-        } else if (queue.length / capacity >= 4) {
+        } else if (queue.length / count >= 4) {
             resize(queue.length / 2);
         }
     }
@@ -54,19 +54,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             }
         }
         queue = newOne;
+        futureIndex = index;
     }
 
     public Item dequeue() {
-        capacity--;
-        int index;
+        count--;
+        int randomIndex;
 
         do {
-            index = StdRandom.uniform(queue.length - 1);
-        } while (queue[index] == null);
+            randomIndex = StdRandom.uniform(queue.length - 1);
+        } while (queue[randomIndex] == null);
 
-        Item forRemove = queue[index];
-        queue[index] = null;
-        adjustSize();
+        Item forRemove = queue[randomIndex];
+        queue[randomIndex] = null;
+        adjustSize(futureIndex);
         return forRemove;
     }
     // remove and return a random item
