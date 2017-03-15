@@ -62,7 +62,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int randomIndex;
 
         do {
-            randomIndex = StdRandom.uniform(queue.length - 1);
+            randomIndex = StdRandom.uniform(queue.length);
         } while (queue[randomIndex] == null);
 
         Item forRemove = queue[randomIndex];
