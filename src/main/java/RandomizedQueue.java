@@ -27,37 +27,41 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }                        // return the number of items on the queue
 
     public void enqueue(Item item) {
-        adjustSize();
-        queue[count++] = item;
+        if (this.count == queue.length) {
+            Item[] resizedQueue = (Item[]) new Object[queue.length * 2];
+
+            for(int i = 0; i < queue.length; i++) {
+                resizedQueue[i] = queue[i];
+            }
+
+            this.queue = resizedQueue;
+        }
+
+        queue[count] = item;
+
+        this.count++;
     }           // add the item
 
     public Item dequeue() {
-        int randomIndex = getRandomIndex();
-        Item forRemove = queue[randomIndex];
-        count--;
-        queue[randomIndex] = queue[count];
-        queue[count] = null;
-        adjustSize();
-        return forRemove;
-    }
+        int rand = getRandomIndex();
+        Item dequeued = queue[rand];
 
-    private void adjustSize() {
-        if (count == 0) {
-            return;
-        } else if (queue.length == count) {
-            resize(queue.length * 2);
-        } else if (queue.length / count >= 4) {
-            resize(queue.length / 2);
-        }
-    }
+        this.count--;
 
-    private void resize(int i) {
-        Item[] newOne = (Item[]) new Object[i];
-        int index = 0;
-        for (Item item : queue) {
-            newOne[index++] = item;
+        queue[rand] = queue[this.count];
+        queue[this.count] = null;
+
+        if (this.queue.length > 4 && this.count <= queue.length / 4) {
+            Item [] resizedQueue = (Item[]) new Object[queue.length / 2];
+
+            for(int i = 0; i < this.count; i++) {
+                resizedQueue[i] = queue[i];
+            }
+
+            this.queue = resizedQueue;
         }
-        queue = newOne;
+
+        return dequeued;
     }
 
     private int getRandomIndex() {
@@ -80,32 +84,51 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }                     // return (but do not remove) a random item
 
     public Iterator<Item> iterator() {
-        return new RandomizeQueueIterator<>();
+        return new RandomizeQueueIterator<>(queue, count);
     }   // return an independent iterator over items in random order
 
     private class RandomizeQueueIterator<Item> implements Iterator<Item> {
-        private Item[] randomCopy;
-        private int index;
+        private Item[] iteratorQueue;
+        private int iteratorIndex = 0;
 
-        public RandomizeQueueIterator() {
-            randomCopy = (Item[]) Arrays.copyOf(queue, queue.length);
-            StdRandom.shuffle(randomCopy);
-            index = 0;
-        }
+        public RandomizeQueueIterator(Item[] queue, int size) {
 
-        public boolean hasNext() {
-            return randomCopy.length > index;
-        }
+            iteratorQueue = (Item[]) new Object[size];
 
-        public Item next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+            //Copy items into iterator queue
+            for(int i = 0; i < iteratorQueue.length; i++) {
+                iteratorQueue[i] = queue[i];
             }
-            return randomCopy[index++];
+
+            //Knuth shuffle the iterator queue
+            for(int j = 1; j < iteratorQueue.length; j++) {
+                int swapIndex = StdRandom.uniform(j + 1);
+
+                Item temp = iteratorQueue[j];
+                iteratorQueue[j] = iteratorQueue[swapIndex];
+                iteratorQueue[swapIndex] = temp;
+            }
         }
 
+        @Override
+        public boolean hasNext() {
+            return (iteratorIndex < iteratorQueue.length);
+        }
+
+        @Override
+        public Item next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException("No more objects to iterate through");
+            }
+
+            Item item = iteratorQueue[iteratorIndex];
+            iteratorIndex++;
+            return item;
+        }
+
+        @Override
         public void remove() {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Remove method not supported");
         }
     }
 
