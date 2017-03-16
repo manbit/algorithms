@@ -8,7 +8,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] queue;
     private int count;
-    private int futureIndex;
 
     public RandomizedQueue() {
         count = 0;
@@ -28,18 +27,24 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }                        // return the number of items on the queue
 
     public void enqueue(Item item) {
-        adjustSize(futureIndex);
-        queue[futureIndex++] = item;
-        count++;
-
+        adjustSize();
+        queue[count++] = item;
     }           // add the item
 
-    private void adjustSize(int index) {
+    public Item dequeue() {
+        int randomIndex = getRandomIndex();
+        Item forRemove = queue[randomIndex];
+        count--;
+        queue[randomIndex] = queue[count];
+        queue[count] = null;
+        adjustSize();
+        return forRemove;
+    }
+
+    private void adjustSize() {
         if (count == 0) {
-            futureIndex = 0;
             return;
-        }
-        if (queue.length == count || queue.length == index) {
+        } else if (queue.length == count) {
             resize(queue.length * 2);
         } else if (queue.length / count >= 4) {
             resize(queue.length / 2);
@@ -50,26 +55,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] newOne = (Item[]) new Object[i];
         int index = 0;
         for (Item item : queue) {
-            if (item != null) {
-                newOne[index++] = item;
-            }
+            newOne[index++] = item;
         }
         queue = newOne;
-        futureIndex = index;
     }
 
-    public Item dequeue() {
-        count--;
+    private int getRandomIndex() {
         int randomIndex;
-
         do {
             randomIndex = StdRandom.uniform(queue.length);
         } while (queue[randomIndex] == null);
-
-        Item forRemove = queue[randomIndex];
-        queue[randomIndex] = null;
-        adjustSize(futureIndex);
-        return forRemove;
+        return randomIndex;
     }
     // remove and return a random item
 
