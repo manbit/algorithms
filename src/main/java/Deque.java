@@ -110,9 +110,9 @@ public class Deque<Item> implements Iterable<Item> {
             if (current.value == null) {
                 throw new NoSuchElementException();
             }
-            Item toRemove = (Item) current.value;
+            Item toReturn = (Item) current.value;
             current = current.next;
-            return toRemove;
+            return toReturn;
         }
 
         public void remove() {

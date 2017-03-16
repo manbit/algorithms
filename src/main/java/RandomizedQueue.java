@@ -34,11 +34,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     }           // add the item
 
-    private void adjustSize(int futureIndex) {
+    private void adjustSize(int index) {
         if (count == 0) {
+            futureIndex = 0;
             return;
         }
-        if (queue.length == count || queue.length == futureIndex) {
+        if (queue.length == count || queue.length == index) {
             resize(queue.length * 2);
         } else if (queue.length / count >= 4) {
             resize(queue.length / 2);
