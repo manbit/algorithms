@@ -8,15 +8,16 @@ public class Permutation {
         int k = Integer.parseInt(args[0]);
         String[] strings = StdIn.readAllStrings();
 
-        for(int i = 0; i < strings.length; i++) {
-            int randomIndex = StdRandom.uniform(k);
-            String tmp = strings[randomIndex];
-            strings[randomIndex] = strings[i];
-            strings[i] = tmp;
+        for(int i = 1; i < strings.length; i++) {
+            int randIndex = StdRandom.uniform(i + 1);
+            String temp = strings[i];
+            strings[i] = strings[randIndex];
+            strings[randIndex] = temp;
         }
 
-        for(int y = 0; y < k; y++) {
-            StdOut.print(strings[y]);
+        //Output
+        for(int j = 0; j < k; j++) {
+            StdOut.println(strings[j]);
         }
 
     }
