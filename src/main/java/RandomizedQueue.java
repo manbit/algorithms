@@ -1,33 +1,40 @@
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.StdRandom;
 
+/** RandomizedQueue is a generic array-implemented queue that
+ * will dequeue items at random. It will also iterate at random. */
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] queue;
-    private int count;
+    private int size;
 
+    /** Constructor to create a new randomised queue. */
     public RandomizedQueue() {
-        count = 0;
-        queue = (Item[]) new Object[1];
-    }                 // construct an empty randomized queue
+        int defaultSize = 1;
 
-    public static void main(String[] args) {
+        this.queue = (Item[]) new Object[defaultSize];
+        this.size = 0;
+    }
 
-    }   // unit testing (optional)
-
+    /** Returns true if the queue is empty. */
     public boolean isEmpty() {
-        return count == 0;
-    }                 // is the queue empty?
+        return (this.size == 0);
+    }
 
+    /** Returns the size of the queue. */
     public int size() {
-        return count;
-    }                        // return the number of items on the queue
+        return this.size;
+    }
 
+    /** Adds a new item to the queue. */
     public void enqueue(Item item) {
-        if (this.count == queue.length) {
+        if (item == null) {
+            throw new NullPointerException("Cannot enqueue null objects.");
+        }
+
+        if (this.size == queue.length) {
             Item[] resizedQueue = (Item[]) new Object[queue.length * 2];
 
             for(int i = 0; i < queue.length; i++) {
@@ -37,24 +44,29 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             this.queue = resizedQueue;
         }
 
-        queue[count] = item;
+        queue[size] = item;
 
-        this.count++;
-    }           // add the item
+        this.size++;
+    }
 
+    /** Removes and returns an item at random from the queue. */
     public Item dequeue() {
-        int rand = getRandomIndex();
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is currently empty.");
+        }
+
+        int rand = getRandomOccupiedIndex();
         Item dequeued = queue[rand];
 
-        this.count--;
+        this.size--;
 
-        queue[rand] = queue[this.count];
-        queue[this.count] = null;
+        queue[rand] = queue[this.size];
+        queue[this.size] = null;
 
-        if (this.queue.length > 4 && this.count <= queue.length / 4) {
+        if (this.queue.length > 4 && this.size <= queue.length / 4) {
             Item [] resizedQueue = (Item[]) new Object[queue.length / 2];
 
-            for(int i = 0; i < this.count; i++) {
+            for(int i = 0; i < this.size; i++) {
                 resizedQueue[i] = queue[i];
             }
 
@@ -64,34 +76,36 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return dequeued;
     }
 
-    private int getRandomIndex() {
-        int randomIndex;
-        do {
-            randomIndex = StdRandom.uniform(queue.length);
-        } while (queue[randomIndex] == null);
-        return randomIndex;
-    }
-    // remove and return a random item
-
+    /** Returns an item at random without deleting it. */
     public Item sample() {
-        int index;
-        do {
-            index = StdRandom.uniform(queue.length - 1);
-        } while (queue[index] != null);
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is currently empty.");
+        }
 
-        Item notRemoved = queue[index];
-        return notRemoved;
-    }                     // return (but do not remove) a random item
+        return queue[getRandomOccupiedIndex()];
+    }
 
+    /** Returns an integer of a random index which is not null. */
+    private int getRandomOccupiedIndex() {
+        while(true) {
+            int rand = StdRandom.uniform(this.size);
+            if(queue[rand] != null) {
+                return rand;
+            }
+        }
+    }
+
+    /** Returns an iterator object to allow random iteration through queue. */
     public Iterator<Item> iterator() {
-        return new RandomizeQueueIterator<>(queue, count);
-    }   // return an independent iterator over items in random order
+        return new ListIterator(queue, size);
+    }
 
-    private class RandomizeQueueIterator<Item> implements Iterator<Item> {
+    private class ListIterator implements Iterator<Item> {
+
         private Item[] iteratorQueue;
         private int iteratorIndex = 0;
 
-        public RandomizeQueueIterator(Item[] queue, int size) {
+        public ListIterator(Item[] queue, int size) {
 
             iteratorQueue = (Item[]) new Object[size];
 
@@ -131,5 +145,4 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new UnsupportedOperationException("Remove method not supported");
         }
     }
-
 }
