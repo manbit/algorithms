@@ -7,10 +7,6 @@ public class Deque<Item> implements Iterable<Item> {
     private int size;
 
     public Deque() {
-        head = new Node();
-        tail = head;
-        head.next = tail;
-        tail.privious = head;
     }                           // construct an empty deque
 
     public static void main(String[] args) {
@@ -29,67 +25,80 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null) {
             throw new NullPointerException();
         }
-        if (head.value != null) {
-            Node node = new Node();
-            node.value = item;
-            node.privious = head;
-            head.next = node;
-            head = node;
-        } else {
-            head.value = item;
-        }
+
+        Node newNode = new Node();
+        newNode.value = item;
+
         size++;
+
+        if (size == 1) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            Node exHead = head;
+            head = newNode;
+            head.next = exHead;
+            exHead.privious = head;
+        }
     }          // add the item to the front
 
     public void addLast(Item item) {
         if (item == null) {
             throw new NullPointerException();
         }
-        if (tail.value != null) {
-            Node node = new Node();
-            node.value = item;
-            node.next = tail;
-            tail.privious = node;
-            tail = node;
-        } else {
-            tail.value = item;
-        }
+
+        Node newLast = new Node();
+        newLast.value = item;
+
         size++;
+
+        if (size == 1) {
+            head = newLast;
+            tail = newLast;
+        } else {
+            Node exLast = tail;
+            tail = newLast;
+            tail.privious = exLast;
+            exLast.next = tail;
+        }
+
     }           // add the item to the end
 
     public Item removeFirst() {
         if (size == 0) throw new NoSuchElementException();
-        Node forRemove = head;
-        Item value = forRemove.value;
-        if (size > 1) {
-            head = forRemove.privious;
-            head.next = null;
-        }
+        Item value = head.value;
         size--;
-        clean(forRemove);
-        return value;
+
+        head = head.next;
+
+        if (size == 0) {
+            tail = null;
+        } else {
+            head.privious = null;
+        }
+
+        return  value;
     }                // remove and return the item from the front
 
     public Item removeLast() {
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        Node forRemove = tail;
-        Item value = forRemove.value;
-        if (size > 1) {
-            tail = forRemove.next;
-            tail.privious = null;
-        }
+
+        Item value = tail.value;
+
         size--;
-        clean(forRemove);
+
+        tail = tail.privious;
+
+        if (size == 0) {
+            head = null;
+        } else {
+            tail.next = null;
+        }
+
         return value;
     }                 // remove and return the item from the end
-
-    private void clean(Node node) {
-        node.privious = null;
-        node.next = null;
-        node.value = null;
-    }
 
     public Iterator<Item> iterator() {
         return new DequeIterator<>();
@@ -103,7 +112,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public boolean hasNext() {
-            return current != null && current.next != null;
+            return current != null;
         }
 
         public Item next() {
