@@ -115,4 +115,13 @@ public class PointTest {
         StdDraw.show();
         Thread.sleep(2_000);
     }
+
+    @Test
+    public void testSlopeTo() {
+        Point p = new Point(10, 10);
+        Point q = new Point(-10, 20);
+
+        double v = p.slopeTo(q);
+        double v1 = q.slopeTo(p);
+    }
 }
