@@ -29,7 +29,7 @@ public class BruteCollinearPoints {
                         double xj = points[i].slopeTo(points[j]);
                         double xi = points[i].slopeTo(points[x]);
                         double xz = points[i].slopeTo(points[z]);
-                        if (xj == xi && xi == xz) {
+                        if (Double.compare(xj, xi) == 0 && Double.compare(xi, xz) == 0) {
                             segments[count++] = new LineSegment(points[x], points[z]);
                         }
                     }
@@ -44,7 +44,9 @@ public class BruteCollinearPoints {
     }        // the number of line segments
 
     public LineSegment[] segments() {
-        return segments;
+        LineSegment[] copy = new LineSegment[count];
+        System.arraycopy(segments, 0, copy, 0, count);
+        return copy;
     }                // the line segments
 
 }
