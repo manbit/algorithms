@@ -7,7 +7,7 @@ public class FastCollinearPoints {
     }     // finds all line segments containing 4 or more points
 
     public int numberOfSegments() {
-        return 0;
+        return segments.length - 1;
     }        // the number of line segments
 
     public LineSegment[] segments() {

@@ -13,6 +13,16 @@ public class BruteCollinearPoints {
                 throw new NullPointerException();
             }
         }
+
+        Arrays.sort(points);
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                if (points[i].compareTo(points[j]) == 0) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
         segments = new LineSegment[points.length];
         for (int a = 0; a < points.length - 3; a++) {
             for (int b = a + 1; b < points.length - 2; b++) {
@@ -32,9 +42,10 @@ public class BruteCollinearPoints {
                         double ac = points[a].slopeTo(points[c]);
                         double ad = points[a].slopeTo(points[d]);
                         if (Double.compare(ab, ac) == 0 && Double.compare(ac, ad) == 0) {
-                            Point[] results = new Point[]{points[a], points[b], points[c], points[d]};
+                           /* Point[] results = new Point[]{points[a], points[b], points[c], points[d]};
                             Arrays.sort(results);
-                            segments[count++] = new LineSegment(results[0], results[results.length - 1]);
+                            segments[count++] = new LineSegment(results[0], results[results.length - 1]);*/
+                            segments[count++] = new LineSegment(points[a], points[d]);
                         }
                     }
                 }
