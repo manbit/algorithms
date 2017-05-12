@@ -12,7 +12,7 @@ public class FastCollinearPoints {
 
     public LineSegment[] segments() {
         LineSegment[] copy = new LineSegment[count];
-        System.arraycopy(segments,0, copy, 0, count);
+        System.arraycopy(segments, 0, copy, 0, count);
         return copy;
     }                // the line segments
 }

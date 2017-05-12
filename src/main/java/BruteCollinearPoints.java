@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class BruteCollinearPoints {
     private int count = 0;
     private LineSegment[] segments;
@@ -12,25 +14,27 @@ public class BruteCollinearPoints {
             }
         }
         segments = new LineSegment[points.length];
-        for (int i = 0; i < points.length - 3; i++) {
-            for (int j = i + 1; j < points.length - 2; j++) {
-                for (int x = j + 1; x < points.length - 1; x++) {
-                    for (int z = x + 1; z < points.length; z++) {
+        for (int a = 0; a < points.length - 3; a++) {
+            for (int b = a + 1; b < points.length - 2; b++) {
+                for (int c = b + 1; c < points.length - 1; c++) {
+                    for (int d = c + 1; d < points.length; d++) {
 
-                        if (points[i].equals(points[j])
-                                || points[i].equals(points[x])
-                                || points[i].equals(points[z])
-                                || points[j].equals(points[x])
-                                || points[j].equals(points[z])
-                                || points[x].equals(points[z])) {
+                        if (points[a].equals(points[b])
+                                || points[a].equals(points[c])
+                                || points[a].equals(points[d])
+                                || points[b].equals(points[c])
+                                || points[b].equals(points[d])
+                                || points[c].equals(points[d])) {
                             throw new IllegalArgumentException();
                         }
 
-                        double xj = points[i].slopeTo(points[j]);
-                        double xi = points[i].slopeTo(points[x]);
-                        double xz = points[i].slopeTo(points[z]);
-                        if (Double.compare(xj, xi) == 0 && Double.compare(xi, xz) == 0) {
-                            segments[count++] = new LineSegment(points[x], points[z]);
+                        double ab = points[a].slopeTo(points[b]);
+                        double ac = points[a].slopeTo(points[c]);
+                        double ad = points[a].slopeTo(points[d]);
+                        if (Double.compare(ab, ac) == 0 && Double.compare(ac, ad) == 0) {
+                            Point[] results = new Point[]{points[a], points[b], points[c], points[d]};
+                            Arrays.sort(results);
+                            segments[count++] = new LineSegment(results[0], results[results.length - 1]);
                         }
                     }
                 }

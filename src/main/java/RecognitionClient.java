@@ -27,11 +27,13 @@ public class RecognitionClient {
             p.draw();
         }
         StdDraw.show();
+        while (!StdDraw.mousePressed()) {
+        }
 
         // print and draw the line segments
 //        StdDraw.setPenColor(Color.YELLOW);
         BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-        for (int i = collinear.numberOfSegments(); i > 0; i--) {
+        for (int i = collinear.numberOfSegments()-1; i >= 0; i--) {
             if (collinear.segments()[i] != null) {
                 StdOut.println(collinear.segments()[i]);
                 collinear.segments()[i].draw();
