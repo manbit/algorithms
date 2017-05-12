@@ -6,7 +6,7 @@ public class BruteCollinearPoints {
 
     public BruteCollinearPoints(Point[] src) {
 
-        Point[] points = new Point[src.length - 1];
+        Point[] points = new Point[src.length];
         System.arraycopy(src, 0, points, 0, src.length);
 
         if (points == null) {
