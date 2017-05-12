@@ -4,7 +4,11 @@ public class BruteCollinearPoints {
     private int count = 0;
     private LineSegment[] segments;
 
-    public BruteCollinearPoints(Point[] points) {
+    public BruteCollinearPoints(Point[] src) {
+
+        Point[] points = new Point[src.length - 1];
+        System.arraycopy(src, 0, points, 0, src.length - 1);
+
         if (points == null) {
             throw new NullPointerException();
         }
@@ -42,9 +46,6 @@ public class BruteCollinearPoints {
                         double ac = points[a].slopeTo(points[c]);
                         double ad = points[a].slopeTo(points[d]);
                         if (Double.compare(ab, ac) == 0 && Double.compare(ac, ad) == 0) {
-                           /* Point[] results = new Point[]{points[a], points[b], points[c], points[d]};
-                            Arrays.sort(results);
-                            segments[count++] = new LineSegment(results[0], results[results.length - 1]);*/
                             segments[count++] = new LineSegment(points[a], points[d]);
                         }
                     }
